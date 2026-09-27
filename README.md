@@ -48,19 +48,6 @@ The segment flags are:
 - `is_winback_target`
 - `is_engagement_declining`
 
-## Public repository/ setup
-
-The complete solution is hosted here:
-
-[GitHub repository](https://github.com/DBTBYDANISH/telia-martech-segmentation)
-
-Clone it with:
-
-```bash
-git clone https://github.com/DBTBYDANISH/telia-martech-segmentation.git
-cd telia-martech-segmentation
-```
-
 ## Requirements
 
 - Python 3.12 or later
