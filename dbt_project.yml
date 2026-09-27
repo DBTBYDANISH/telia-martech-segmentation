@@ -1,0 +1,71 @@
+
+name: 'martech_audience_segmentation'
+version: '1.0.0'
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'martech_audience_segmentation'
+
+model-paths: ["models", "00_sources"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+models:
+  martech_audience_segmentation:
+    staging:
+      +materialized: table
+      +schema: staging
+    features:
+      +materialized: table
+      +schema: features
+    shared:
+      +materialized: view
+      +schema: shared
+
+
+seeds:
+  martech_audience_segmentation:
+    +database: martech_db
+    +schema: staging  # Loads seeds into the staging schema in Snowflake
+    customers:
+      +column_types:
+        customer_id: varchar
+        email: varchar
+        phone_number: varchar
+        signup_date: date
+        subscription_plan: varchar
+        subscription_status: varchar
+        status_change_date: date
+    product_events:
+      +column_types:
+        event_id: varchar
+        customer_id: varchar
+        event_type: varchar
+        event_ts: timestamp
+        event_properties: varchar
+    campaign_interactions:
+      +column_types:
+        interaction_id: varchar
+        customer_id: varchar
+        campaign_id: varchar
+        channel: varchar
+        interaction_type: varchar
+        interaction_ts: timestamp
+    consent_registry:
+      +column_types:
+        customer_id: varchar
+        purpose_code: varchar
+        consent_ts: timestamp
+    consent_purpose_code:
+      +column_types:
+        name: varchar
+        purpose_code: varchar
+        legal_ground: varchar
+
+vars:
+  as_of_date: '2025-06-30'

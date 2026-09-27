@@ -1,0 +1,21 @@
+name,purpose_code,legal_ground
+Accounting,PP_001,Legal Obligation
+Authority and individual reporting,PP_002,Legal Obligation
+Billing and payment,PP_003,Performance of contract
+Customer administration,PP_004,Performance of contract
+Fraud detection,PP_005,Performance of contract
+Credit check,PP_006,Legal Obligation
+Communications transmission,PP_007,Performance of contract
+Development and maintenance,PP_008,Legitimate interest
+Customer care,PP_009,Legitimate interest
+Network security,PP_010,Legitimate interest
+Basic marketing,PP_011,Legitimate interest
+Direct marketing contact - Email,PP_012,Legitimate interest
+Direct marketing contact - SMS,PP_013,Legitimate interest
+Direct marketing contact - Phone,PP_014,Legitimate interest
+Basic profiling,PP_015,Legitimate interest
+Extensive profiling,PP_016,Consent
+Personalized offers,PP_017,Consent
+Data sharing with social media partner,PP_018,Consent
+Analytics,PP_019,Legitimate interest
+Market research surveys,PP_020,Legitimate interest

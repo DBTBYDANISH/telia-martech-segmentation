@@ -1,0 +1,118 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "Cleaned customer profiles with normalized plan and subscription status values."
+    columns:
+      - name: customer_id
+        description: "Unique customer identifier in CUST_XXXXXX format."
+        tests:
+          - unique
+          - not_null
+      - name: email
+        description: "Customer email address."
+      - name: phone_number
+        description: "Customer phone number as provided by the source."
+      - name: signup_date
+        description: "Date the customer account was created."
+      - name: subscription_plan
+        description: "Normalized subscription plan."
+      - name: subscription_status
+        description: "Normalized current subscription status."
+      - name: status_change_date
+        description: "Date the subscription status last changed."
+
+  - name: stg_product_events
+    description: "Cleaned product event records with normalized event types and timestamps."
+    columns:
+      - name: event_id
+        description: "Unique product event identifier."
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Customer associated with the event."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+      - name: event_type
+        description: "Normalized product event type."
+        tests:
+          - accepted_values:
+              values: ['login', 'stream_start', 'feature_use', 'support_ticket']
+      - name: event_ts
+        description: "Timestamp when the event occurred."
+      - name: event_properties
+        description: "Event-specific JSON properties."
+
+  - name: stg_campaign_interactions
+    description: "Cleaned campaign funnel interactions with normalized channel and interaction type."
+    columns:
+      - name: interaction_id
+        description: "Unique campaign interaction identifier."
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Customer associated with the interaction."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+      - name: campaign_id
+        description: "Campaign identifier."
+      - name: channel
+        description: "Normalized communication channel."
+        tests:
+          - accepted_values:
+              values: ['email', 'push', 'sms', 'paid_social']
+      - name: interaction_type
+        description: "Normalized campaign funnel stage."
+        tests:
+          - accepted_values:
+              values: ['sent', 'delivered', 'opened', 'clicked', 'unsubscribed']
+      - name: interaction_ts
+        description: "Timestamp when the interaction occurred."
+
+  - name: stg_consent_registry
+    description: "Consent records with customer identifiers normalized to CUST_XXXXXX format."
+    columns:
+      - name: customer_id
+        description: "Normalized customer identifier. Multiple consent records may exist per customer."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+      - name: purpose_code
+        description: "Consent purpose code."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_consent_purpose_code')
+                field: purpose_code
+      - name: consent_ts
+        description: "Timestamp when consent was granted."
+
+  - name: stg_consent_purpose_code
+    description: "Consent purpose lookup with legal-ground metadata."
+    columns:
+      - name: purpose_code
+        description: "Unique consent purpose code."
+        tests:
+          - unique
+          - not_null
+      - name: name
+        description: "Human-readable processing purpose."
+      - name: legal_ground
+        description: "GDPR legal basis for the purpose."
+        tests:
+          - accepted_values:
+              values: ['Legal Obligation', 'Performance of contract', 'Legitimate interest', 'Consent']

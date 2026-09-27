@@ -1,0 +1,110 @@
+version: 2
+
+models:
+  - name: int_customer_metrics
+    description: "Customer-level behavioral and campaign metrics calculated over rolling windows."
+    columns:
+      - name: customer_id
+        description: "Unique customer identifier at the metric grain."
+        tests:
+          - unique
+          - not_null
+      - name: logins_last_30_days
+        description: "Total login events in the last 30 days."
+      - name: days_since_last_activity
+        description: "Days since the customer's latest product event."
+      - name: support_tickets_last_90_days
+        description: "Total support tickets in the last 90 days."
+      - name: active_days_last_14_days
+        description: "Distinct active days in the last 14 days."
+      - name: active_days_prior_14_days
+        description: "Distinct active days in the preceding 14-day period."
+      - name: campaign_open_rate_last_60_days
+        description: "Campaign opens divided by delivered messages over the last 60 days."
+      - name: campaign_open_rate_last_60_days_percentage
+        description: "Campaign open rate expressed as a percentage over the last 60 days."
+
+  - name: int_customer_metrics_date
+    description: "Customer metrics calculated relative to the configured as-of date."
+    columns:
+      - name: customer_id
+        description: "Unique customer identifier at the metric grain."
+        tests:
+          - unique
+          - not_null
+      - name: as_of_timestamp
+        description: "Configured as-of timestamp used as the calculation anchor."
+        tests:
+          - not_null
+      - name: logins_last_30_days
+        description: "Total login events in the 30 days ending at as_of_timestamp."
+      - name: logins_last_14_days
+        description: "Total login events in the 14 days ending at as_of_timestamp."
+      - name: days_since_last_activity
+        description: "Days since the customer's latest product event at the calculation anchor."
+      - name: support_tickets_last_90_days
+        description: "Total support tickets in the 90 days ending at as_of_timestamp."
+      - name: active_days_last_14_days
+        description: "Distinct active days in the 14 days ending at as_of_timestamp."
+      - name: active_days_prior_14_days
+        description: "Distinct active days in the preceding 14-day period."
+      - name: campaign_open_rate_last_60_days
+        description: "Campaign opens divided by delivered messages in the 60 days ending at as_of_timestamp."
+      - name: campaign_open_rate_last_60_days_percentage
+        description: "Campaign open rate expressed as a percentage in the 60 days ending at as_of_timestamp."
+
+  - name: fct_customer_segments
+    description: "Final audience segmentation mart assigning eligible customers to active marketing segments."
+    columns:
+      - name: customer_id
+        description: "Unique customer identifier."
+        tests:
+          - unique
+          - not_null
+      - name: email
+        description: "Customer email address."
+        tests:
+          - not_null
+      - name: status_change_date
+        description: "Date the subscription status last changed."
+      - name: subscription_plan
+        description: "Current subscription tier."
+        tests:
+          - accepted_values:
+              values: ['basic', 'standard', 'premium']
+      - name: subscription_status
+        description: "Current subscription state."
+        tests:
+          - accepted_values:
+              values: ['active', 'churned', 'paused']
+      - name: is_eligible
+        description: "Flag indicating if the customer meets active subscription and consent criteria."
+        tests:
+          - not_null
+
+  - name: fct_customer_segments_date
+    description: "Configured-date audience segmentation mart assigning eligible customers to marketing segments."
+    columns:
+      - name: customer_id
+        description: "Unique customer identifier."
+        tests:
+          - unique
+          - not_null
+      - name: as_of_timestamp
+        description: "Configured source timestamp used as the metrics calculation anchor."
+        tests:
+          - not_null
+      - name: subscription_plan
+        description: "Current subscription tier."
+        tests:
+          - accepted_values:
+              values: ['basic', 'standard', 'premium']
+      - name: subscription_status
+        description: "Current subscription state."
+        tests:
+          - accepted_values:
+              values: ['active', 'churned', 'paused']
+      - name: is_eligible
+        description: "Flag indicating whether the customer meets active subscription and consent criteria."
+        tests:
+          - not_null

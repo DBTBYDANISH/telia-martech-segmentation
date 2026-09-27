@@ -1,0 +1,30 @@
+version: 2
+
+sources:
+  - name: stg
+    description: "Raw CSV seed tables loaded into Snowflake."
+    database: MARTECH_DB
+    schema: staging
+    tables:
+      - name: customers
+        description: "Raw customer profile data."
+      - name: product_events
+        description: "Raw product usage event logs."
+        loaded_at_field: event_ts
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+      - name: campaign_interactions
+        description: "Raw marketing campaign funnel interactions."
+        loaded_at_field: interaction_ts
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+      - name: consent_registry
+        description: "Raw customer consent records."
+        loaded_at_field: consent_ts
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+      - name: consent_purpose_code
+        description: "Lookup table for consent purpose codes and legal grounds."
